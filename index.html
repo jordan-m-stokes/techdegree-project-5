@@ -8,10 +8,17 @@
     </head>
     <body>
         <div id="employees">
-            <h1>AWESOME STARTUP - EMPLOYEE DIRECTORY</h1>
+            <header>
+                <h1>AWESOME STARTUP - EMPLOYEE DIRECTORY</h1>
+                <input type="search" placeholder="search..." id="search"></input>
+            </header>
             <ul>
                 <!--"employee-generation.js" adds content here...-->
+                <span id="no-results" class="hide">No Results.</span>
             </ul>
+        </div>
+        <div id="blur">
+            <span id="load-status"></span>
         </div>
         <div id="overlay">
             <!--"employee-modal.js" adds content here...-->
