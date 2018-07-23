@@ -36,9 +36,8 @@ function setOverlay(index, employees)
     const left = overlay.querySelector('#overlay-slide-left');
     const right = overlay.querySelector('#overlay-slide-right');
     const avatar = overlay.querySelector('#overlay-avatar');
+    const notHidden = employees.elements[0].parentNode.querySelectorAll('not:(.hide)');
 
-    left.value = (index === 0) ? (EMPLOYEE_COUNT - 1) : (index - 1);
-    right.value = (index + 1 === EMPLOYEE_COUNT) ? (0) : (index + 1);
 
     close.addEventListener('click', handler_onOverlayCloseClick);
     left.addEventListener('click', handler_onSlideClick);
@@ -55,7 +54,6 @@ function setOverlay(index, employees)
 
 function handler_onOverlayCloseClick()
 {
-    enableScroll();
     fadeOut(overlay);
     fadeOut(blur);
 }
@@ -97,7 +95,6 @@ function handler_onEmployeeClick(event)
     setOverlay(index, employees);
 
     scrollTo(0, 0);
-    disableScroll();
     fadeIn(overlay);
     fadeIn(blur);
 }
