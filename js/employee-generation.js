@@ -3,14 +3,16 @@
   --- Fields ---
 *******************************************************************************/
 
-const EMPLOYEE_COUNT = 12;
+//amount of employees to generate
+const EMPLOYEE_COUNT = 11;
 
-let employees =
-{
-    objects: [],
-    elements: []
-}
+//a list of employee objects
+let employees = [];
+//indexes of employees refined by search
+let filteredEmployeeIndexes = [];
 
+
+//elements
 const search = document.querySelector('#search');
 const employeeList = document.querySelector('#employees').querySelector('ul');
 const blur = document.querySelector('#blur');
@@ -46,12 +48,16 @@ returns - (element) random employee li element
     return element;
 }
 
-function searchList(ul, search)
+/*description - filters employees based on query
+paramaters: - object - (object) employee object containing necessary data
+returns - (element) random employee li element
+*/ function searchList(ul, searchQuery)
 {
     const employees = ul.querySelectorAll(".employee");
-    const noResults = ul.querySelector("#no-results")
+    const filteredIndexes = [];
+    const noResults = ul.parentNode.querySelector("#no-results")
     let length = ul.querySelectorAll('.hide:not(#no-results)').length;
-    search = search.toLowerCase();
+    searchQuery = searchQuery.toLowerCase();
 
     employees.forEach(employee =>
     {
@@ -59,10 +65,11 @@ function searchList(ul, search)
         let email = employee.querySelector('.employee-email').textContent;
 
         //checks if name or email contains the user's search
-        //uses "exclude" class to exclude student from list
-        if(name.includes(search) || email.includes(search))
+        //uses "hide" class to exclude student from list
+        if(name.includes(searchQuery) || email.includes(searchQuery))
         {
             employee.classList.remove("hide");
+            filteredIndexes.push(employee.value);
         }
         else
         {
@@ -70,32 +77,38 @@ function searchList(ul, search)
         }
     });
 
-    let newLength = ul.querySelectorAll(".hide:not(#no-results)").length;
+    //gets length of search results
+    let newLength = filteredIndexes.length;
 
-    if(newLength === employees.length)
+    //displays "no results" if appropriate
+    if(newLength === 0)
     {
         noResults.classList.remove("hide");
     }
+    //hides otherwise
     else
     {
         noResults.classList.add("hide");
     }
+    //if search results changed this time the screen flashes
     if(length !== newLength)
     {
         flash(ul);
     }
+    return filteredIndexes;
 }
 
 /*******************************************************************************
   --- Listeners ---
 *******************************************************************************/
 
+//performs an employee search whenever a key is hit while focused on search bar
 search.addEventListener('keyup', () =>
 {
     if(search.value !== searchQuery)
     {
         searchQuery = search.value;
-        searchList(employeeList, searchQuery);
+        filteredEmployeeIndexes = searchList(employeeList, searchQuery);
     }
 });
 
@@ -103,27 +116,38 @@ search.addEventListener('keyup', () =>
   --- Init ---
 *******************************************************************************/
 
-function init(i, length)
+/*description - a recursive function that loads employees until "i" equals
+                "length"
+paramaters: - i      - (integer) the iterator
+            - length - (integer) the total amount of iterations to perform
+*/ function init(i, length)
 {
+    //updates load status to user
     loadStatus.textContent = `Loading Employee: ${i+1}/${length}`
 
+    //performs an ajax request for a new random employee
     fetch('https://randomuser.me/api/?nat=us')
         .then(response => response.json())
         .then(data => data.results[0])
         .then(data =>
     {
+        //uses data retrieved from ajax request to create an element and
+        //simplified data
         data = simplifyData(data);
         let element = createEmployeeElement(data);
 
+        //stores constructed element and data and adds it to the page
         element.value = i;
-        employees.objects.push(data);
-        employees.elements.push(element);
+        employees.push({data: data, element: element});
+        filteredEmployeeIndexes.push(i);
         employeeList.appendChild(element);
 
+        //calls function over again if appropriate
         if(i + 1 < length)
         {
             init(i + 1, length);
         }
+        //prepares page for use if loading is finished
         else
         {
             loadStatus.className = 'hide';
