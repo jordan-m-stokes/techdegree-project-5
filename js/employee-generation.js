@@ -4,7 +4,7 @@
 *******************************************************************************/
 
 //amount of employees to generate
-const EMPLOYEE_COUNT = 11;
+const EMPLOYEE_COUNT = 12;
 
 //a list of employee objects
 let employees = [];
