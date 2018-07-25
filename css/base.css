@@ -54,7 +54,6 @@ li {
     border-radius: 7px;
     } #search:focus {
         outline-style: none;
-
     }
 
 #employees {
@@ -122,15 +121,17 @@ li {
     } #overlay-slide-left {
         color: white;
         position: absolute;
-        right: 108%;
+        right: 103%;
         top: 200px;
         font-size: 42px;
+        padding: 35px;
     } #overlay-slide-right {
         color: white;
         position: absolute;
-        left: 108%;
+        left: 103%;
         top: 200px;
         font-size: 42px;
+        padding: 35px;
     }  #overlay-avatar {
         width: 130px;
         height: 130px;

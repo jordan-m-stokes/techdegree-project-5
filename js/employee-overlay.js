@@ -84,9 +84,9 @@ paramaters: - index           - (integer) the index for the employee to display
     }
 
     //adds listeners for close, left, and right buttons
-    close.addEventListener('click', handler_onOverlayCloseClick);
-    left.addEventListener('click', handler_onSlideClick);
-    right.addEventListener('click', handler_onSlideClick);
+    close.addEventListener('click', handler_onOverlayClose);
+    left.addEventListener('click', handler_onSlideToggle);
+    right.addEventListener('click', handler_onSlideToggle);
 
     //sets picture for avatar
     avatar.style.background = `radial-gradient(at center, transparent, rgba(255,255,255,0.1) 60%, white 70%),
@@ -99,15 +99,18 @@ paramaters: - index           - (integer) the index for the employee to display
 *******************************************************************************/
 
 //handler for when the close button is clicked
-function handler_onOverlayCloseClick()
+function handler_onOverlayClose(event)
 {
-    fadeOut(overlay);
-    fadeOut(blur);
+    if(event.type === 'click' || event.keyCode === 27)
+    {
+        fadeOut(overlay);
+        fadeOut(blur);
+    }
 }
 
 
 //handler for when left or right arrows are hit
-function handler_onSlideClick(event)
+function handler_onSlideToggle(event)
 {
     let target = event.target;
     let index = target.value;
@@ -120,7 +123,7 @@ function handler_onSlideClick(event)
 }
 
 //handler to open overlay for whatever employee a user clicks
-function handler_onEmployeeClick(event)
+function handler_onEmployeeSelection(event)
 {
     let target = event.target;
 
@@ -143,9 +146,18 @@ overlay.className = 'hide';
 //called after employees are generated from "employee-generation.js"
 function modalInit()
 {
+    //adds a listener to the blur blackground so that when a user clicks
+    //outside the overlay the overlay will close
+    blur.addEventListener('click', handler_onOverlayClose);
+    //handler for whenever escape is pressed
+    //will fade overlay regardless of whether it's open
+    //this doesn't matter since the overlay's display is set to none when it's
+    //not visible
+    document.addEventListener('keyup', handler_onOverlayClose);
+
     //adds click listener for all generated employees
     employees.forEach(employee =>
     {
-        employee.element.addEventListener('click', handler_onEmployeeClick);
+        employee.element.addEventListener('click', handler_onEmployeeSelection);
     });
 }
